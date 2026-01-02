@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>TZ Soluções - Cotações</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <style>
     * {
       margin: 0;
@@ -87,7 +88,6 @@
       font-size: 12px;
       color: #718096;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
       margin-bottom: 5px;
       font-weight: 600;
     }
@@ -121,50 +121,20 @@
       color: white;
     }
 
-    th {
-      padding: 15px 12px;
+    th, td {
+      padding: 12px;
       text-align: left;
-      font-weight: 600;
-      font-size: 14px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    th:first-child {
-      border-radius: 8px 0 0 0;
-    }
-
-    th:last-child {
-      border-radius: 0 8px 0 0;
-    }
-
-    td {
-      padding: 15px 12px;
-      border-bottom: 1px solid #e2e8f0;
-      color: #2d3748;
     }
 
     tbody tr:hover {
       background: #f7fafc;
     }
 
-    tbody tr:last-child td {
-      border-bottom: none;
-    }
-
     input {
       width: 100%;
-      padding: 10px 12px;
+      padding: 10px;
       border: 2px solid #e2e8f0;
       border-radius: 6px;
-      font-size: 14px;
-      transition: all 0.3s ease;
-    }
-
-    input:focus {
-      outline: none;
-      border-color: #667eea;
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
     }
 
     .btn-enviar {
@@ -177,19 +147,7 @@
       font-size: 16px;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.3s ease;
       margin-top: 20px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .btn-enviar:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
-    }
-
-    .btn-enviar:active {
-      transform: translateY(0);
     }
 
     footer {
@@ -197,29 +155,6 @@
       color: white;
       padding: 20px;
       margin-top: 30px;
-      font-size: 14px;
-    }
-
-    @media (max-width: 768px) {
-      body {
-        padding: 10px;
-      }
-
-      header h1 {
-        font-size: 22px;
-      }
-
-      .card {
-        padding: 20px;
-      }
-
-      table {
-        font-size: 13px;
-      }
-
-      th, td {
-        padding: 10px 8px;
-      }
     }
   </style>
 </head>
@@ -227,7 +162,7 @@
 <body>
 
 <div class="container">
-  
+
   <header>
     <h1>🏢 TZ Soluções - Sistema de Cotações</h1>
   </header>
@@ -236,7 +171,7 @@
 
   <div class="card">
     <h2>📋 Identificação da Cotação</h2>
-    <div style="text-align: center; padding: 10px 0;">
+    <div style="text-align:center">
       <span class="cotacao-id">ID: <span id="idCotacao">-</span></span>
     </div>
   </div>
@@ -245,7 +180,7 @@
     <h2>🏭 Empresa Solicitante</h2>
     <div class="info-grid">
       <div class="info-item">
-        <label>Nome da Empresa</label>
+        <label>Nome</label>
         <span id="solicitanteNome">-</span>
       </div>
       <div class="info-item">
@@ -259,7 +194,7 @@
     <h2>🚚 Empresa Fornecedora</h2>
     <div class="info-grid">
       <div class="info-item">
-        <label>Nome da Empresa</label>
+        <label>Nome</label>
         <span id="fornecedorNome">-</span>
       </div>
       <div class="info-item">
@@ -270,140 +205,117 @@
   </div>
 
   <div class="card">
-    <h2>📦 Produtos para Cotação</h2>
-    <div style="overflow-x: auto;">
-      <table>
-        <thead>
-          <tr>
-            <th>Produto</th>
-            <th>Quantidade</th>
-            <th>Marca</th>
-            <th>Valor Unitário</th>
-            <th>Impostos</th>
-          </tr>
-        </thead>
-        <tbody id="tabelaProdutos"></tbody>
-      </table>
-    </div>
+    <h2>📦 Produtos</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Produto</th>
+          <th>Qtd</th>
+          <th>Marca</th>
+          <th>Valor</th>
+          <th>Imposto</th>
+        </tr>
+      </thead>
+      <tbody id="tabelaProdutos"></tbody>
+    </table>
+
     <button class="btn-enviar" onclick="enviarCotacao()">Enviar Cotação</button>
   </div>
 
 </div>
 
 <footer>
-  © 2024 TZ Soluções - Todos os direitos reservados
+  © 2024 TZ Soluções
 </footer>
 
 <script>
-  function obterDadosDaURL() {
-    const params = new URLSearchParams(window.location.search);
-    const base64 = params.get("dados");
-    if (!base64) return null;
-
-    try {
-      return JSON.parse(atob(base64));
-    } catch {
-      return null;
-    }
+function obterDadosDaURL() {
+  const p = new URLSearchParams(window.location.search);
+  const b64 = p.get("dados");
+  if (!b64) return null;
+  try {
+    return JSON.parse(atob(b64));
+  } catch {
+    return null;
   }
+}
 
-  function mostrarErro(mensagem) {
-    const erroDiv = document.getElementById("erro");
-    erroDiv.innerText = mensagem;
-    erroDiv.classList.add("ativo");
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
+function mostrarErro(msg) {
+  const e = document.getElementById("erro");
+  e.innerText = msg;
+  e.classList.add("ativo");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
 
-  function limparErro() {
-    const erroDiv = document.getElementById("erro");
-    erroDiv.innerText = "";
-    erroDiv.classList.remove("ativo");
-  }
+function limparErro() {
+  const e = document.getElementById("erro");
+  e.innerText = "";
+  e.classList.remove("ativo");
+}
 
-  const dados = obterDadosDaURL();
+const dados = obterDadosDaURL();
 
-  if (!dados) {
-    mostrarErro("⚠️ Erro: Nenhum dado válido foi informado na URL.");
-  } else {
-    document.getElementById("idCotacao").innerText = Number(dados.idCotacao) || 0;
-    document.getElementById("solicitanteNome").innerText = dados.empresaSolicitante?.nome || "-";
-    document.getElementById("solicitanteCnpj").innerText = dados.empresaSolicitante?.cnpj || "-";
-    document.getElementById("fornecedorNome").innerText = dados.empresaFornecedor?.nome || "-";
-    document.getElementById("fornecedorCnpj").innerText = dados.empresaFornecedor?.cnpj || "-";
+if (!dados) {
+  mostrarErro("Nenhum dado válido foi informado.");
+} else {
+  document.getElementById("idCotacao").innerText = dados.idCotacao || 0;
+  document.getElementById("solicitanteNome").innerText = dados.empresaSolicitante?.nome || "-";
+  document.getElementById("solicitanteCnpj").innerText = dados.empresaSolicitante?.cnpj || "-";
+  document.getElementById("fornecedorNome").innerText = dados.empresaFornecedor?.nome || "-";
+  document.getElementById("fornecedorCnpj").innerText = dados.empresaFornecedor?.cnpj || "-";
 
-    const tbody = document.getElementById("tabelaProdutos");
+  const tbody = document.getElementById("tabelaProdutos");
 
-    dados.produtos.forEach((produto, index) => {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td><strong>${produto.nome}</strong></td>
-        <td>${produto.quantidade}</td>
-        <td><input id="marca_${index}" placeholder="Digite a marca"></td>
-        <td><input id="valor_${index}" type="number" step="0.01" placeholder="R$ 0,00"></td>
-        <td><input id="imposto_${index}" type="number" step="0.01" placeholder="R$ 0,00"></td>
-      `;
-      tbody.appendChild(tr);
+  dados.produtos.forEach((p, i) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${p.nome}</td>
+      <td>${p.quantidade}</td>
+      <td><input id="marca_${i}"></td>
+      <td><input id="valor_${i}" type="number" step="0.01"></td>
+      <td><input id="imposto_${i}" type="number" step="0.01"></td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+async function enviarCotacao() {
+  limparErro();
+
+  const produtos = dados.produtos.map((p, i) => ({
+    nome: p.nome,
+    quantidade: p.quantidade,
+    marca: document.getElementById(`marca_${i}`).value,
+    valorUnitario: parseFloat(document.getElementById(`valor_${i}`).value || 0),
+    impostos: parseFloat(document.getElementById(`imposto_${i}`).value || 0)
+  }));
+
+  const payload = {
+    idCotacao: dados.idCotacao || 0,
+    empresaSolicitante: dados.empresaSolicitante,
+    empresaFornecedor: dados.empresaFornecedor,
+    produtos
+  };
+
+  try {
+    const res = await fetch("http://179.127.27.205:8888/tz/cotacao", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
     });
-  }
 
-  async function enviarCotacao() {
-    limparErro();
-
-    if (!dados) return;
-
-    const produtosValidados = [];
-
-    for (let i = 0; i < dados.produtos.length; i++) {
-      const marca = document.getElementById(`marca_${i}`).value.trim();
-      const valor = parseFloat(document.getElementById(`valor_${i}`).value || 0);
-      const imposto = parseFloat(document.getElementById(`imposto_${i}`).value || 0);
-
-      produtosValidados.push({
-        nome: dados.produtos[i].nome,
-        quantidade: dados.produtos[i].quantidade,
-        marca: marca,
-        valorUnitario: valor,
-        impostos: imposto
-      });
+    if (res.status === 200) {
+      alert("✅ Cotação enviada com sucesso!");
+      return;
     }
 
-    const payload = {
-      idCotacao: parseInt(dados.idCotacao, 10) || 0,
-      empresaSolicitante: dados.empresaSolicitante,
-      empresaFornecedor: dados.empresaFornecedor,
-      produtos: produtosValidados
-    };
+    const erro = await res.text();
+    mostrarErro(erro || "Erro ao enviar cotação.");
 
-    console.log("Enviando payload:", payload);
-
-    try {
-      const response = await fetch("http://179.127.27.205:8888/tz/cotacao", {
-        method: "POST",
-        headers: { 
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(payload)
-      });
-
-      console.log("Status da resposta:", response.status);
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error("Erro da API:", errorText);
-        throw new Error(`Erro ${response.status}: ${errorText}`);
-      }
-
-      const result = await response.json();
-      console.log("Resposta da API:", result);
-      
-      alert("✅ Cotação respondida com sucesso!");
-      limparErro();
-      
-    } catch (error) {
-      console.error("Erro completo:", error);
-      mostrarErro("❌ Erro ao enviar a cotação. Tente novamente.");
-    }
+  } catch {
+    mostrarErro("Erro de comunicação com o servidor.");
   }
+}
 </script>
 
 </body>
