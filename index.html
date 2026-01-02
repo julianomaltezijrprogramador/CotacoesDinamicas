@@ -291,7 +291,7 @@
 </div>
 
 <footer>
-  © 2026 TZ Soluções - Todos os direitos reservados
+  © 2024 TZ Soluções - Todos os direitos reservados
 </footer>
 
 <script>
@@ -358,14 +358,6 @@
       const valor = parseFloat(document.getElementById(`valor_${i}`).value || 0);
       const imposto = parseFloat(document.getElementById(`imposto_${i}`).value || 0);
 
-      const algumPreenchido = marca || valor > 0 || imposto > 0;
-      const todosPreenchidos = marca && valor > 0 && imposto > 0;
-
-      if (algumPreenchido && !todosPreenchidos) {
-        mostrarErro(`⚠️ Erro: Preencha todos os campos do produto "${dados.produtos[i].nome}".`);
-        return;
-      }
-
       produtosValidados.push({
         nome: dados.produtos[i].nome,
         quantidade: dados.produtos[i].quantidade,
@@ -382,11 +374,6 @@
       produtos: produtosValidados
     };
 
-    if (!Number.isInteger(payload.idCotacao) || payload.idCotacao <= 0) {
-      mostrarErro("⚠️ Erro: ID da cotação inválido.");
-      return;
-    }
-
     fetch("http://179.127.27.205:8888/tz/cotacao", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -394,7 +381,7 @@
     })
     .then(r => {
       if (!r.ok) throw new Error();
-      alert("✅ Cotação enviada com sucesso!");
+      alert("✅ Cotação respondida com sucesso!");
       limparErro();
     })
     .catch(() => {
